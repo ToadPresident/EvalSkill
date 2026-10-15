@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+.env
+.env.*
+!.env.example
+output/
+runs/
+calibration/
+data/
+*.pdf
+*.zip

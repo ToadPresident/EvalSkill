@@ -1,0 +1,6 @@
+interface:
+  display_name: "Scientific Benchmark Validity v4"
+  short_description: "M2M reports with checked facts and clear judgments"
+  default_prompt: "Use $scientific-benchmark-validity to produce a complete M2M analysis of the benchmark I provide, in English unless I explicitly request Chinese."
+policy:
+  allow_implicit_invocation: true
