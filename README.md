@@ -59,7 +59,7 @@ python3 -m unittest discover -s skills/scientific-benchmark-validity/tests -v
 
 Tests cover invalid scores, duplicate observations, version/condition mixing, explicit ungraded attempts, missingness, repeat weighting, resampling units, synthetic provenance and evidence integrity. They are software checks, not proof of scientific validity or better agent reports.
 
-The development protocol uses a fixed-source CORE-Bench comparison and GPQA regression, preserving first completed reports before outside review. Both are known development cases; case calibration does not establish unseen-benchmark effectiveness. Raw reports and primary materials are retained outside this clean distribution. See [CHANGELOG](CHANGELOG.md) for released changes and the validation scope.
+The development comparison uses fixed-source CORE-Bench reports and GPQA regression, preserving first completed outputs before outside review. See [validation methods and observed results](VALIDATION.md), including retained strengths and regressions. These known cases do not establish unseen-benchmark effectiveness. Raw reports and primary materials are retained outside this clean distribution. See [CHANGELOG](CHANGELOG.md) for released changes.
 
 ## Repository scope
 
