@@ -24,22 +24,34 @@ def digest(path):
 def write_json(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + "\n")
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
 
 
 def require_profile(profile):
+    if not isinstance(profile, dict):
+        raise ValueError("profile must be a JSON object")
+    for key in ("benchmark", "columns", "units", "score_scale", "source", "filters", "score_mapping", "resampling"):
+        if key in profile and not isinstance(profile[key], dict):
+            raise ValueError(f"profile.{key} must be an object")
     if profile.get("schema_version") != 1:
         raise ValueError("profile.schema_version must be 1")
     if profile.get("data_origin") not in {"observed", "synthetic"}:
         raise ValueError("Declare data_origin as observed or synthetic; never infer it from successful execution")
     for key in ("name", "version"):
-        if not str(profile.get("benchmark", {}).get(key, "")).strip():
+        value = profile.get("benchmark", {}).get(key)
+        if not isinstance(value, str) or not value.strip():
             raise ValueError(f"benchmark.{key} is required")
     for key in ("system", "item", "score"):
-        if not str(profile.get("columns", {}).get(key, "")).strip():
+        value = profile.get("columns", {}).get(key)
+        if not isinstance(value, str) or not value.strip():
             raise ValueError(f"columns.{key} is required")
-        if not str(profile.get("units", {}).get(key, "")).strip():
+        value = profile.get("units", {}).get(key)
+        if not isinstance(value, str) or not value.strip():
             raise ValueError(f"units.{key} must describe what is measured")
+    if not all(isinstance(v, str) and v.strip() for v in profile["columns"].values()):
+        raise ValueError("All column names must be nonempty strings")
+    if "condition" in profile and (not isinstance(profile["condition"], str) or not profile["condition"].strip()):
+        raise ValueError("condition must be a nonempty string")
     if not profile.get("condition") and not profile["columns"].get("condition"):
         raise ValueError("Declare a constant condition or a condition column")
     scale = profile.get("score_scale", {})
@@ -59,10 +71,24 @@ def require_profile(profile):
     sampling = profile.get("resampling", {"unit": "none"})
     if sampling.get("unit") not in {"none", "item", "cluster"}:
         raise ValueError("resampling.unit must be none, item or cluster")
-    if sampling.get("unit") != "none" and not sampling.get("justification", "").strip():
+    justification = sampling.get("justification")
+    if sampling.get("unit") != "none" and (not isinstance(justification, str) or not justification.strip()):
         raise ValueError("Resampling requires a scientific justification")
     if sampling.get("unit") == "cluster" and not profile["columns"].get("cluster"):
         raise ValueError("Cluster resampling requires columns.cluster")
+    if "item_inventory" in profile:
+        inventory = profile["item_inventory"]
+        if not isinstance(inventory, dict):
+            raise ValueError("item_inventory must be an object")
+        ids = inventory.get("ids")
+        if not isinstance(ids, list) or not ids or not all(isinstance(i, str) and i.strip() == i and i for i in ids):
+            raise ValueError("item_inventory.ids must be a nonempty list of nonblank, trimmed strings")
+        if len(ids) != len(set(ids)):
+            raise ValueError("item_inventory.ids contains duplicates")
+        if inventory.get("version") != profile["benchmark"]["version"]:
+            raise ValueError("item_inventory.version must match benchmark.version")
+        if not isinstance(inventory.get("source_locator"), str) or not inventory["source_locator"].strip():
+            raise ValueError("item_inventory.source_locator is required")
 
 
 def inspect(csv_path, profile):
@@ -111,6 +137,8 @@ def inspect(csv_path, profile):
             continue
         if columns.get("version") and version != profile["benchmark"]["version"]:
             errors.append(prefix + "version differs from the declared benchmark version")
+        if columns.get("condition") and "condition" in profile and condition != profile["condition"]:
+            errors.append(prefix + "condition differs from the declared constant condition")
         key = (version, condition, ids["system"], ids["item"], trial)
         if key in keys:
             errors.append(prefix + "duplicate logical observation (version, condition, system, item, trial)")
@@ -155,11 +183,25 @@ def inspect(csv_path, profile):
     groups = []
     for version, condition in sorted({(r["version"], r["condition"]) for r in records}):
         rows = [r for r in records if (r["version"], r["condition"]) == (version, condition)]
-        systems, items = sorted({r["system"] for r in rows}), sorted({r["item"] for r in rows})
+        systems = sorted({r["system"] for r in rows})
+        observed_items = {r["item"] for r in rows}
+        expected = set(profile["item_inventory"]["ids"]) if "item_inventory" in profile else None
+        items = sorted(observed_items | (expected or set()))
+        absent = sorted(expected - observed_items) if expected is not None else []
+        unexpected = sorted(observed_items - expected) if expected is not None else []
+        if absent:
+            warnings.append(f"{version}/{condition}: {len(absent)} inventory items have no observed attempts")
+        if unexpected:
+            errors.append(f"{version}/{condition}: observed items outside declared inventory: {', '.join(unexpected)}")
         attempted = Counter((r["system"], r["item"]) for r in rows)
         graded = Counter((r["system"], r["item"]) for r in rows if r["score"] is not None)
         counts = [graded[(s, i)] for s in systems for i in items]
         groups.append({"version": version, "condition": condition, "systems": len(systems), "items": len(items),
+                       "observed_items": len(observed_items),
+                       "coverage_basis": "declared_item_inventory" if expected is not None else "observed_items_only",
+                       "expected_items": len(expected) if expected is not None else None,
+                       "unobserved_expected_items": absent, "unexpected_observed_items": unexpected,
+                       "complete_expected_item_coverage": not absent and not unexpected if expected is not None else None,
                        "attempted_rows": len(rows), "graded_rows": sum(graded.values()),
                        "ungraded_attempts": sum(r["score"] is None for r in rows),
                        "unavailable_system_item_cells": len(systems) * len(items) - len(attempted),
@@ -192,28 +234,38 @@ def diagnose(audit, records, profile, draws=2000, seed=17, allow_demo=False):
     for row in records:
         if row["score"] is not None:
             cells[(row["system"], row["item"])].append((row["trial"], row["score"]))
-    if not cells:
-        raise ValueError("No graded responses to diagnose")
     cells = {k: [v for _, v in sorted(vals)] for k, vals in sorted(cells.items())}
-    systems = sorted({s for s, _ in cells})
-    items = sorted({i for _, i in cells})
+    systems = sorted({row["system"] for row in records})
+    items = sorted({row["item"] for row in records} | set(profile.get("item_inventory", {}).get("ids", [])))
     per_system = []
     for system in systems:
         groups = {i: cells[(system, i)] for i in items if (system, i) in cells}
         vals = [v for scores in groups.values() for v in scores]
         repeats = {len(v) for v in groups.values()}
-        result = {"system": system, "graded_items": len(groups), "graded_trials": len(vals),
-                  "mean_over_observed_trials": statistics.mean(vals),
-                  "mean_over_observed_item_means": statistics.mean(statistics.mean(v) for v in groups.values()),
-                  "repeat_count_uniform_within_system": len(repeats) == 1}
+        attempts = [r for r in records if r["system"] == system]
+        result = {"system": system, "attempted_items": len({r["item"] for r in attempts}),
+                  "attempted_trials": len(attempts), "ungraded_trials": len(attempts) - len(vals),
+                  "graded_items": len(groups), "graded_trials": len(vals),
+                  "score_status": "graded_responses_available" if vals else "no_graded_responses",
+                  "mean_over_observed_trials": statistics.mean(vals) if vals else None,
+                  "mean_over_observed_item_means": statistics.mean(statistics.mean(v) for v in groups.values()) if groups else None,
+                  "repeat_count_uniform_within_system": len(repeats) == 1 if repeats else None}
         if len(repeats) == 1:
             k = next(iter(repeats))
             result.update({"k": k, "empirical_any_success_in_k": statistics.mean(any(v) for v in groups.values()),
                            "empirical_all_success_in_k": statistics.mean(all(v) for v in groups.values()),
                            "empirical_mixed_outcome_fraction": statistics.mean(0 < sum(v) < k for v in groups.values())})
         per_system.append(result)
-    per_item = [{"item": i, "systems_observed": sum((s, i) in cells for s in systems),
-                 "mean_over_system_cell_means": statistics.mean(statistics.mean(cells[(s, i)]) for s in systems if (s, i) in cells)} for i in items]
+    per_item = []
+    for item in items:
+        means = [statistics.mean(cells[(s, item)]) for s in systems if (s, item) in cells]
+        attempts = [r for r in records if r["item"] == item]
+        per_item.append({"item": item, "systems_observed": len(means),
+                         "attempted_systems": len({r["system"] for r in attempts}),
+                         "attempted_trials": len(attempts),
+                         "ungraded_trials": sum(r["score"] is None for r in attempts),
+                         "score_status": "graded_responses_available" if means else "no_graded_responses",
+                         "mean_over_system_cell_means": statistics.mean(means) if means else None})
     sampling = profile.get("resampling", {"unit": "none"})
     panel_complete = audit["groups"][0]["complete_balanced_graded_panel"]
     if not panel_complete:
@@ -244,6 +296,7 @@ def diagnose(audit, records, profile, draws=2000, seed=17, allow_demo=False):
     return {"schema_version": 1, "computation_status": "completed", "data_origin": profile["data_origin"],
             "evidence_kind": "simulation" if profile["data_origin"] == "synthetic" else "computed_from_existing_observations",
             "source": audit["source"], "filters": audit["filters"], "per_system": per_system, "per_item": per_item,
+            "coverage": audit["groups"][0],
             "paired_comparisons": pairs, "interval_status": reason or "Computed conditional task/cluster bootstrap intervals",
             "bootstrap": {"draws": draws, "seed": seed, **sampling},
             "limits": ["Describes the declared frozen systems, tasks and scoring conditions; no new benchmark run was performed",
@@ -265,7 +318,7 @@ def main():
     parser.add_argument("--allow-demo", action="store_true")
     args = parser.parse_args()
     try:
-        profile = json.loads(Path(args.profile).read_text())
+        profile = json.loads(Path(args.profile).read_text(encoding="utf-8"))
         audit, rows = inspect(args.csv, profile)
         result = audit if args.action == "audit" else diagnose(audit, rows, profile, args.bootstrap, args.seed, args.allow_demo)
         result["execution"] = {"command": sys.argv, "python": sys.version.split()[0], "script_sha256": digest(__file__),

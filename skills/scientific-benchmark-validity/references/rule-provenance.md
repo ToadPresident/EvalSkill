@@ -50,6 +50,10 @@ Keep three levels distinct: M2M framework principles, independently sourced stat
 
 The executable v5 scope is CSV auditing, binary response/repetition summaries and conditional paired task/cluster bootstrap intervals, plus evidence-record integrity. The IRT/G-theory guidance does not imply those models are implemented. Our helper neither imports torch_measure nor bundles third-party code/data.
 
+## v5.1 implementation refinements
+
+The existing I06, I12, I13 and I14 procedures now explicitly cover decisive outcome-table completeness, conditions retained in compact judgments, optional versioned task inventories, all-ungraded visibility, and checks against the actual report file. Reference loading moves to the relevant task step, and paths resolve from the installed skill. These are implementation refinements prompted by development failures and portability requirements; they add no M2M dimension or universal statistical requirement. Their software behavior is tested separately from their effect on complete report quality.
+
 ## Applying the register
 
 For a decisive step, state: **principle -> application condition -> case evidence -> judgment**. For example, M04 permits direct-criterion satisfaction only after the report establishes that the measurement and claimed outcome coincide. The observed protocol supplies that fact; M04 alone cannot supply it. Use I02 when separating a fixed-set statement from a broader statement about new questions.

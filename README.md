@@ -1,8 +1,26 @@
 # EvalSkill
 
-Skills for evidence-grounded evaluation research. The current skill produces complete, claim-specific analyses of scientific benchmarks using **Measurement to Meaning (M2M)**, with explicit evidence checks and data-dependent diagnostics.
+Understand what a scientific benchmark measures, how its score is produced, and which claims the evidence supports. Give your coding agent a benchmark name, paper or result files; EvalSkill applies **Measurement to Meaning (M2M)** to produce one complete, sourced analysis.
 
-**Current version: 5.0.0.** The unchanged v4 skill is preserved at [v4.0.0](https://github.com/ToadPresident/EvalSkill/tree/v4.0.0). This is an independent implementation, not an official release by the M2M authors.
+**Current version: 5.1.0.** Earlier releases remain available at [v5.0.0](https://github.com/ToadPresident/EvalSkill/tree/v5.0.0) and [v4.0.0](https://github.com/ToadPresident/EvalSkill/tree/v4.0.0). This is an independent implementation, not an official release by the M2M authors.
+
+## Install, then ask
+
+From the project where you want to use the skill:
+
+```sh
+npx skills@1.7.2 add ToadPresident/EvalSkill --skill scientific-benchmark-validity
+```
+
+Choose your agent in the installer. Supported installation targets include **Codex, Claude Code, Cursor, Gemini CLI, GitHub Copilot and OpenCode**. This route uses the [Skills CLI](https://github.com/vercel-labs/skills) and needs Node.js 22.20+ and Git. No additional model account, API key or MCP service is needed by EvalSkill. [Manual installation without Node, agent-specific commands, version pinning and troubleshooting](docs/INSTALLATION.md) are available.
+
+Then ask your agent:
+
+> Use scientific-benchmark-validity to help me understand CORE-Bench. Produce one complete English report explaining its tasks, scoring, main claims, evidence and all five M2M dimensions. Identify the paper and benchmark version before interpreting results.
+
+You can start with a name alone. The agent gathers the measurement details; you do not need to fill in a profile. It needs source access, or materials you supply. Python 3.10+ is needed only for optional bundled data checks. Reports default to English; explicitly request Chinese or bilingual output when wanted.
+
+See the [demonstration guide](docs/DEMO.md) for a short installation-to-analysis walkthrough. Installation tests and analytical-quality tests are reported separately in [VALIDATION.md](VALIDATION.md).
 
 ## Start here
 
@@ -12,22 +30,19 @@ Skills for evidence-grounded evaluation research. The current skill produces com
 - [Measurement profile and data contract](skills/scientific-benchmark-validity/references/measurement-profile.md)
 - [Analysis routing](skills/scientific-benchmark-validity/references/analysis-routing.md)
 
-## Use the skill
+## Input and output
 
-Copy the complete `skills/scientific-benchmark-validity` directory into your agent's configured skills directory, or provide the entrypoint path explicitly in an agent that supports local skill instructions. Keep its references and scripts together. Merely cloning this repository does not install the skill.
+Optional inputs include a particular claim, intended use, version, task examples or response CSV. Without a user-specified use, the report explains published purposes and claims rather than inventing a deployment decision. One request may contain retrieval, computation and internal review.
 
-Example request:
+The complete report explains the measurement process, attributed claims, five-dimensional evidence and inference, reasons for each judgment, supported narrower conclusions, and the evidence that would change them. Relevant diagnostics and exact source locations accompany the reasoning. Missing response data do not prevent a document-based report. An interactive visual companion is a [planned extension](docs/DEVELOPMENT.md), not a shipped renderer.
 
-> Use scientific-benchmark-validity to produce one complete English M2M report on the benchmark described in this paper. Check the source claims, scoring conditions and available response data, explain all five validity dimensions for each material claim, and distinguish completed analysis from proposed studies.
-
-A benchmark name, paper, link or evidence folder is enough to start. Version, claims and intended use may be specified when important. Reports default to **English**, even when the request is in Chinese; explicit Chinese or bilingual output is supported. One request may contain several internal reading, checking, computation and review steps. Missing data do not prevent a complete document-based report.
-
-## What v5 does
+## What the skill does
 
 - Preserves claim ownership, scope and the use being assessed.
 - Examines content, criterion, construct, external and consequential validity with evidence, inference, gaps/satisfaction conditions, judgment reasons and revision conditions.
 - Records system configuration, task hierarchy, scoring, repeated versus aggregated responses and source versions before selecting an analysis.
 - Separates source integrity, factual accuracy, relevance to the claim and actual computational execution.
+- Checks explicit evidence markers in the actual report, retains all-ungraded systems, and optionally compares observed tasks with a versioned expected inventory.
 - Audits CSV observations and, when justified, computes binary response/repetition summaries and paired task/cluster bootstrap intervals.
 - Returns numerical findings to the relevant claim; it does not turn a statistical output into a universal validity score.
 
@@ -42,7 +57,7 @@ From the skill directory, with your reviewed profile and data:
 ```sh
 python3 scripts/measurement_tools.py audit --csv responses.csv --profile profile.json --output audit.json
 python3 scripts/measurement_tools.py diagnose --csv responses.csv --profile profile.json --output diagnostics.json --bootstrap 2000 --seed 17
-python3 scripts/verify_evidence.py --registry evidence.json --output evidence_check.json
+python3 scripts/verify_evidence.py --registry evidence.json --report report.md --output evidence_check.json
 ```
 
 Read the [response diagnostic method](skills/scientific-benchmark-validity/references/response-diagnostics.md) and [evidence registry contract](skills/scientific-benchmark-validity/references/evidence-worksheet.md) first. Profiles declare column meaning and data origin; the helpers cannot establish those facts by inspecting identifiers. No downloading, missing-to-zero conversion or automatic simulation fallback occurs. Explicit synthetic demonstrations remain labelled as such.
@@ -57,7 +72,7 @@ Run the synthetic software invariants from the repository root:
 python3 -m unittest discover -s skills/scientific-benchmark-validity/tests -v
 ```
 
-Tests cover invalid scores, duplicate observations, version/condition mixing, explicit ungraded attempts, missingness, repeat weighting, resampling units, synthetic provenance and evidence integrity. They are software checks, not proof of scientific validity or better agent reports.
+The 37 synthetic tests cover invalid scores, duplicate observations, version/condition mixing, explicit ungraded attempts, missingness, repeat weighting, resampling units, task inventories, malformed input, synthetic provenance and evidence integrity. `python3 scripts/check_installation.py` separately installs the package in a disposable project for six agent targets, compares every packaged file, and loads the installed helpers. It requires the installation prerequisites above and makes no model calls. These are software and packaging checks, not proof of scientific validity or better agent reports.
 
 The development comparison uses fixed-source CORE-Bench reports and GPQA regression, preserving first completed outputs before outside review. See [validation methods and observed results](VALIDATION.md), including retained strengths and regressions. These known cases do not establish unseen-benchmark effectiveness. Raw reports and primary materials are retained outside this clean distribution. See [CHANGELOG](CHANGELOG.md) for released changes.
 

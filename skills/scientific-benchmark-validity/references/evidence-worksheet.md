@@ -36,7 +36,7 @@ Follow [inference review](inference-review.md). Keep actual findings, correction
 
 Separate source integrity, fact accuracy, relevance and execution status. A failed extraction is not evidence that a paper is silent. Revisit unreadable tables/appendices or record access limits before declaring bounded absence. Distinguish author-reported results, completed reanalysis, non-execution, failure, unavailable inputs and simulation. These are our I14 records, not M2M ratings.
 
-For calibration or substantial source/computation audits, save `evidence.json` and run `python3 scripts/verify_evidence.py --registry evidence.json --output evidence_check.json`. Source paths resolve from the registry directory, or an explicit `--base-dir`. This compact registry supports the report rather than duplicating it.
+For calibration or substantial source/computation audits, save `evidence.json` and run `python3 scripts/verify_evidence.py --registry evidence.json --report report.md --output evidence_check.json`. Resolve the script from the installed skill directory and pass workspace paths for inputs/outputs. Source paths resolve from the registry directory, or an explicit `--base-dir`. This compact registry supports the report rather than duplicating it.
 
 ```json
 {
@@ -57,3 +57,9 @@ For calibration or substantial source/computation audits, save `evidence.json` a
 Kinds: `author_claim`, `reported_result`, `protocol`, `computed_result`, `simulation`, `analyst_inference`, `proposed_study`. Computed entries reference actual result files/keys and input/command records. Keep excerpts short and optional; paraphrase rather than copying large passages. Page/row verification and semantic support remain source-grounded review tasks.
 
 The helper checks local hashes, ID/reference integrity and optional whitespace-normalized excerpt presence. It checks that a declared completed fact/relevance review records its basis; it does not validate that basis. It does not require a quotation for every dimension, certify factual truth, or decide a validity rating. Never fabricate evidence to pass coverage checks.
+
+### Actual report references
+
+Use explicit `[E1]` or `[E1, E2]` markers in the report, including evidence-index entries when appropriate. Semicolon-separated lists are also accepted; ranges such as `[E1–E3]` are rejected. With `--report`, the helper reads and hashes the delivered UTF-8 file, extracts these markers, and rejects unknown IDs or a mismatch with an optional `report_evidence_ids` list. No markers is a failed citation check, not proof that no evidence is needed.
+
+Omit the legacy `report_evidence_ids` list if redundant. Without `--report`, the result explicitly marks the actual report `not_checked`, even if registry integrity passes. This mechanical check covers explicit markers anywhere in the file; it does not detect every uncited statement, certify a citation's semantic support, or automatically compare computed-result values to execution files. Keep those substantive checks in the review record.

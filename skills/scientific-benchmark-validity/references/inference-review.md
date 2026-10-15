@@ -7,6 +7,8 @@ This is our I08 procedure. Perform it within the same request before delivering 
 | Target | Review action |
 |---|---|
 | Facts | Recheck decision-relevant numerical and protocol clauses using the evidence worksheet. Verify qualifiers independently, including resources, time conditions, uncertainty labels, and whether a value is measured or adjusted. Correct or qualify unsupported wording. |
+| Outcome completeness | For each decisive study, inspect available outcome tables. Separate completion, target matching and independent correctness validation; do not call an outcome unmeasured merely because it lacks independent validation. |
+| Delivery consistency | Preserve route/version/use qualifiers in compact judgments. Scan the actual report when checking evidence IDs. Keep systems/items with no graded responses visible as undefined scores, and state whether task coverage uses an expected inventory or only observed rows. |
 | Data and execution | Check version/condition identity, task hierarchy, valid scale, missingness and repeat structure against the profile. Inspect command status and actual outputs. Preserve author results, this run's computation, failures and demonstrations separately. |
 | Analytical relevance | Identify each operation's claim/use relationship. Confirm eligibility and uncertainty scope. Do not treat software success as scientific support. |
 | Verification meaning | Separate integrity, facts, relevance and execution. Matching hashes/excerpts cannot certify inference; zero extracted quotes do not establish absence. |

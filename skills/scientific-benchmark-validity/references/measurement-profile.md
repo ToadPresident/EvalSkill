@@ -34,11 +34,27 @@ The bundled helper accepts UTF-8 CSV and JSON, using Python 3.10+ standard libra
 
 Use `data_origin: observed` only for actual observations. An author-produced table remains author data; script results are our recomputation of that table, not new experiments. A stored hash establishes byte identity, not truthful provenance or semantics. Source hash is optional for exploration but required for frozen comparisons.
 
-Optional columns: `condition`, `version`, `cluster`, `status`. A `version` column must match the declared benchmark version. Multiple conditions need separate filtered profiles for diagnostics. Filter values are exact CSV strings, or lists of strings. With no trial column, the helper permits only one observation per system/item/condition/version. Identity columns must be nonempty.
+Optional columns: `condition`, `version`, `cluster`, `status`. A `version` column must match the declared benchmark version. If both a constant `condition` and a condition column are supplied, each selected row must match the constant. Multiple conditions need separate filtered profiles for diagnostics. Filter values are exact CSV strings, or lists of strings. With no trial column, the helper permits only one observation per system/item/condition/version. Identity columns must be nonempty. Profile sections must be JSON objects, and column names must be nonempty strings.
 
 Blank score means an ungraded attempt **only** with an explicit `status` column whose value is `ungraded`. No row means no available observation. `NaN`/infinity are rejected, not converted to failures. If the source uses other missing codes, document a reviewed conversion before invoking the helper. Non-binary data can be audited with `interval` (finite `min`, `max`) or `discrete` (`values`), but the bundled diagnostic does not threshold or fit them.
 
 Use `resampling.unit: none` when no sampling interpretation is justified. For related tasks/rubric leaves, retain `columns.cluster` and consider `unit: cluster`; verify the clusters actually match the uncertainty question. The helper cannot infer independence from identifiers. Trial IDs are labels, not interchangeable judges or shared random seeds.
+
+### Optional expected task inventory
+
+When an authoritative task list is available for this exact version and filtered slice, add:
+
+```json
+"item_inventory": {
+  "ids": ["task-1", "task-2", "task-3"],
+  "version": "revision-A",
+  "source_locator": "Versioned manifest URL or local file and exact subset"
+}
+```
+
+IDs must be unique, nonblank strings. The inventory's version must match the profile. The analyst checks its source and applicability; do not derive an allegedly authoritative inventory solely from the response table. Entirely absent expected items remain visible with no observations and prevent complete-panel intervals. Unexpected items fail the identity check. Missing observations remain missing, never zero scores.
+
+Without this inventory, coverage is explicitly `observed_items_only`: the audit cannot detect a task absent from every system. The inventory covers tasks, not wholly absent systems or a required number of trials. `complete_expected_item_coverage` means each expected task appears somewhere; `complete_balanced_graded_panel` additionally checks graded responses and equal repeats across the observed systems.
 
 ## Sources and adaptation
 

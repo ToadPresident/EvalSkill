@@ -2,7 +2,8 @@
 name: scientific-benchmark-validity
 description: Produce a complete, sourced Measurement to Meaning analysis of a scientific benchmark from its name, paper, link, or evaluation data. Check decisive facts, choose diagnostics supported by the data, and explain claim-specific five-dimensional judgments. Reports default to English and support explicit Chinese or bilingual output.
 metadata:
-  version: "5.0.0"
+  version: "5.1.0"
+  compatibility: File-enabled Agent Skills hosts. Optional helpers require Python 3.10+ with no third-party packages. Source retrieval requires network access or user-supplied materials.
 ---
 
 # Scientific benchmark validity
@@ -11,7 +12,13 @@ Deliver a complete, evidence-grounded report in one request. Use published purpo
 
 Write reports in **English by default**, including for a Chinese-language invocation. Honor explicit Chinese or bilingual requests without reducing the analysis. Keep this skill and its resources in English.
 
-Read [the report template](references/report-template.md), [rule provenance](references/rule-provenance.md), and [judgment and use](references/judgment-and-use.md). M identifiers paraphrase M2M; I identifiers describe our implementation. Additional statistical methods have their own sources and conditions; they are not extra M2M requirements or automatic validity tests.
+Load references at the step that needs them. Read [judgment and use](references/judgment-and-use.md) before assigning judgments, [the report template](references/report-template.md) when composing the complete report, and relevant entries in [rule provenance](references/rule-provenance.md) when attributing decisive rules. M identifiers paraphrase M2M; I identifiers describe our implementation. Additional statistical methods have their own sources and conditions; they are not extra M2M requirements or automatic validity tests.
+
+## Start in any supported host
+
+A benchmark name or paper is enough to begin; do not ask the user to fill in a measurement profile. Use the host's available source-retrieval and file tools. Resolve bundled references and scripts from this `SKILL.md` directory, not the user's working directory. Write reports and run records to the user's workspace, keeping the installed skill unchanged. No specific MCP server, model provider, or additional service account is required.
+
+For a name-only request, establish the source and version from primary materials. If source access is unavailable, request the material and explain what remains unresolved; do not invent a sourced report. If Python is unavailable, complete the document-based analysis and mark optional computations unperformed. Do not install unrelated tooling automatically.
 
 ## Establish the claim and measurement
 
@@ -27,7 +34,9 @@ Before consequential analysis, record the **use assessed**: interpretation, resu
 
 Use [the evidence worksheet](references/evidence-worksheet.md) for decisive facts. Inspect primary passages, tables/notes and relevant appendices; verify clauses and qualifiers independently: subset, denominator, configuration, resources, time, uncertainty type/level, and observed versus adjusted or proposed results. Retain supported values when a qualifier is unreported. Reconcile conflicts or retain their effect on the inference. Bound missing-evidence statements to the inspected scope; zero extracted evidence may mean failed extraction. [I06, I14]
 
-Distinguish four checks: source/excerpt integrity, factual accuracy, relevance to the claim, and actual computational execution. [The integrity helper](scripts/verify_evidence.py) can check local hashes, excerpt matching and references using the worksheet contract. It cannot certify page attribution, numerical qualifiers or scientific inference. Preserve each check's status instead of a blanket verified label.
+For each decisive study, inspect its available outcome tables before stating an outcome gap. Distinguish session completion, target matching, and independent correctness validation; an unvalidated outcome is not necessarily unmeasured. [I06]
+
+Distinguish four checks: source/excerpt integrity, factual accuracy, relevance to the claim, and actual computational execution. [The integrity helper](scripts/verify_evidence.py) can check local hashes, excerpt matching and references using the worksheet contract. When using it for a delivered report, pass the actual file with `--report`; use explicit `[E1]` or `[E1, E2]` markers. A declared ID list alone is not a report scan. The helper cannot certify page attribution, numerical qualifiers or scientific inference. Preserve each check's status instead of a blanket verified label.
 
 Read [analysis routing](references/analysis-routing.md) when deciding what can be checked. Select an operation only if it addresses a material inference and the data meet its conditions. With compatible response CSVs, read [response diagnostics](references/response-diagnostics.md), create an explicit profile, and use [measurement tools](scripts/measurement_tools.py) for audit and bounded diagnostics. Do not calculate everything merely because a tool exists. [I10, I13, I15]
 
@@ -53,7 +62,7 @@ Assess content coverage; criterion identity or the required target relationship;
 
 Explain the selected judgment against its plausible neighboring label using [judgment and use](references/judgment-and-use.md). Missing studies do not automatically imply insufficient evidence. Preserve supported narrow interpretations; do not total dimensions into one score. Keep consequential use consistent throughout evidence, rationale, judgment and revision conditions, distinguishing anticipated from measured effects. [M08-M09; I04, I11]
 
-State shared facts once, then explain their different roles per claim. Keep the executive interpretation short and the judgment matrix label-only. Consolidate repeated proposed studies. Integrate material computed results in the report; detailed registries and run records may remain companion files but cannot hide decisive reasoning. [I12]
+State shared facts once, then explain their different roles per claim. Keep the executive interpretation short and the judgment matrix compact, retaining any route, version or use condition that changes a label's meaning. Consolidate repeated proposed studies. Integrate material computed results in the report; detailed registries and run records may remain companion files but cannot hide decisive reasoning. [I12]
 
 ## Review and deliver
 

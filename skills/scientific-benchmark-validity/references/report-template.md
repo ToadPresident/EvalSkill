@@ -99,7 +99,7 @@ Repeat for every materially different claim. Start with one short paragraph expl
 |---|---|---|---|---|---|
 | C1 | [Label] | [Label] | [Label and condition] | [Label] | [Label / ID] |
 
-Define the labels briefly using [judgment and use](judgment-and-use.md), and attribute these working definitions to our implementation. Explain any asterisk for operational satisfaction and any access-pending status; they are not original M2M symbols or additional ratings.
+Define the labels briefly using [judgment and use](judgment-and-use.md), and attribute these working definitions to our implementation. Keep any essential route, version or use condition in the matrix cell or a directly linked note, for example `Insufficient (competence-mediated interpretation only)`. Explain any asterisk for operational satisfaction and any access-pending status; they are not original M2M symbols or additional ratings.
 
 When reproducing a published case, preserve its matrix separately or pair **published -> analyst** labels in each cell. For each changed judgment, state alignment of claim/use/evidence, the decisive reason, and whether the difference is a fact correction, interpretation/threshold choice, or changed scope. A changed use is not a directly comparable rating. Do not duplicate the full argument here.
 
@@ -121,7 +121,9 @@ These are proposals unless actually performed. Consolidate shared studies here; 
 
 | ID | Source content and kind | Exact source location / link | Conditions and inferential limit |
 |---|---|---|---|
-| E1 | [Protocol, measured result, author interpretation, or completed calculation.] | [Version, section/table/page/row.] | [Relevant cohort and what it cannot establish.] |
+| [E1] | [Protocol, measured result, author interpretation, or completed calculation.] | [Version, section/table/page/row.] | [Relevant cohort and what it cannot establish.] |
+
+Use the same explicit `[E1]` / `[E1, E2]` markers in the argument when running the report-reference helper. Inspect the actual delivered file; a manually copied list of IDs is not a substitute.
 
 Make the source's contribution clear where it matters (framework, design, validation, diagnosis, use). A separate contribution table is optional; avoid duplicating this index. Keep precise numerical context in the results table and cross-reference it here. Do not repeat the complete rule register or add a second generic method-trace table.
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.1.0 - 2026-10-15
+
+- Added one-command installation for six coding-agent targets, manual installation, pinned-release instructions and a demonstration guide.
+- Added real-report evidence-reference checks via `--report`, with explicit uninspected and unsupported-marker outcomes.
+- Preserved all-ungraded systems/items as counts with undefined scores; checked conflicting condition declarations and malformed profile/registry input.
+- Added optional versioned task inventories to detect tasks absent from all response rows.
+- Deferred reference loading to relevant steps, preserved conditions in compact judgment tables, and required inspection of available decisive study outcomes.
+- Added 15 synthetic regressions (37 total) and installation/byte-identity CI across Linux, macOS and Windows.
+- Kept v5.0.0 and its raw case reports unchanged. New full-report and comprehension effects have not been measured; see [development priorities](docs/DEVELOPMENT.md).
+
 ## 5.0.0 - 2026-10-15
 
 - Added a measurement profile and explicit routing from claim/evidence requirements to eligible analyses.

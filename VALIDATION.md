@@ -1,5 +1,21 @@
 # Validation scope and development observations
 
+## v5.1 release checks
+
+The current package has 37 synthetic tests: the original 22 plus 15 release regressions. The new cases exercise actual-report E references, entirely ungraded systems/panels, constant-versus-column conditions, malformed JSON objects and expected task inventories. The observed failures were retained locally before fixes. New test cases for previously unsupported features are feature checks, not all pre-existing defects.
+
+`scripts/check_installation.py` uses the pinned Skills CLI 1.7.2 in a disposable project for Codex, Claude Code, Cursor, Gemini CLI, GitHub Copilot and OpenCode. It compares the installed file manifests to the source and loads both installed helpers from outside their package directory. Five targets share the documented `.agents/skills` directory; Claude Code receives `.claude/skills`. This verifies installation and package integrity, not full execution by six models. The workflow now covers Linux, macOS and Windows; see the actual [CI run results](https://github.com/ToadPresident/EvalSkill/actions) for status.
+
+The local installation check passed for all six targets. Native discovery was not established across them: the installed Gemini CLI 0.20.0 does not expose the current skills command, and a standalone Codex discovery service could not start under the local filesystem permissions. These are recorded environment limits, not successful native-host tests. No six-host model-quality comparison was run.
+
+The report helper's scope remains explicit E markers and file integrity. It does not prove all factual statements are cited or that a citation supports a judgment. Computed values are not automatically linked to execution result keys. Expected task inventories must be appropriate to the selected version/slice and do not enumerate missing systems or required repeat counts.
+
+The source-review, summary-condition and deferred-loading changes have not received fresh complete CORE-Bench/GPQA runs. The v5.0.0 reports below are preserved historical results; they are not v5.1 outputs. Planned analytical and researcher-comprehension evaluation is described in [development priorities](docs/DEVELOPMENT.md).
+
+## v5.0.0 development results
+
+The remaining sections describe the frozen v5.0.0 runs and software checks.
+
 ## Software checks
 
 The v5 helpers pass 22 synthetic tests under Python 3.10 and 3.13 in the repository's GitHub Actions workflow. The tests cover invalid/nonfinite scores, duplicate observations, version/condition mixing, missing and ungraded outcomes, repeat aggregation, declared resampling units, synthetic-data handling and evidence-record integrity. They do not test whether a model's validity argument is scientifically persuasive.
