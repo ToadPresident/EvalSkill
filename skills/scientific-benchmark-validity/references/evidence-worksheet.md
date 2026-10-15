@@ -31,3 +31,29 @@ For each claim/dimension, retain the relevant E identifiers, warrant and factual
 ## Review record
 
 Follow [inference review](inference-review.md). Keep actual findings, corrections, unresolved issues, and effects on judgments. Preserve original completed outputs in version comparisons; do not use subsequent edits as evidence of first-run performance.
+
+## Verification layers and optional executable registry
+
+Separate source integrity, fact accuracy, relevance and execution status. A failed extraction is not evidence that a paper is silent. Revisit unreadable tables/appendices or record access limits before declaring bounded absence. Distinguish author-reported results, completed reanalysis, non-execution, failure, unavailable inputs and simulation. These are our I14 records, not M2M ratings.
+
+For calibration or substantial source/computation audits, save `evidence.json` and run `python3 scripts/verify_evidence.py --registry evidence.json --output evidence_check.json`. Source paths resolve from the registry directory, or an explicit `--base-dir`. This compact registry supports the report rather than duplicating it.
+
+```json
+{
+  "sources": [{"id": "S1", "version": "paper revision 1", "locator": "source URL", "path": "paper.txt", "sha256": "<actual SHA256>"}],
+  "evidence": [{
+    "id": "E1", "source_id": "S1", "locator": "Table 2, PDF page 6",
+    "kind": "reported_result", "observation": "Supported paraphrase including material qualifiers",
+    "excerpt": "A short exact locator excerpt, if useful",
+    "review": {
+      "fact": {"status": "checked", "basis": "Describe the inspected passage, qualifiers and reconciliation"},
+      "relevance": {"status": "checked", "basis": "Explain the claim link supported and its limit"}
+    }
+  }],
+  "report_evidence_ids": ["E1"]
+}
+```
+
+Kinds: `author_claim`, `reported_result`, `protocol`, `computed_result`, `simulation`, `analyst_inference`, `proposed_study`. Computed entries reference actual result files/keys and input/command records. Keep excerpts short and optional; paraphrase rather than copying large passages. Page/row verification and semantic support remain source-grounded review tasks.
+
+The helper checks local hashes, ID/reference integrity and optional whitespace-normalized excerpt presence. It checks that a declared completed fact/relevance review records its basis; it does not validate that basis. It does not require a quotation for every dimension, certify factual truth, or decide a validity rating. Never fabricate evidence to pass coverage checks.

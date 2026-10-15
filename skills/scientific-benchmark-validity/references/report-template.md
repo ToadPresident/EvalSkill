@@ -10,6 +10,8 @@ For a three-claim case, aim for about **3,500-5,000 English words including the 
 
 **Method:** [M2M's claim-dependent five dimensions and qualitative labels, with source. Fact verification, argument layout, operational rating definitions, use records, and review procedure are our implementation. Cite the rule register once.]
 
+**Analysis mode:** [Document-based analysis; reanalysis of existing observations; or both. Identify material unavailable inputs. Complete the report in every mode.]
+
 ## Executive interpretation
 
 [About 150-220 words: measurement and direct result; supported claim scope and decisive limits; defensible use and the most useful next evidence. Write after the analysis. Avoid repeating all values and ratings. Separate validity from an achievement threshold.]
@@ -22,9 +24,20 @@ For a three-claim case, aim for about **3,500-5,000 English words including the 
 | Tasks, inputs, and output | [Domains, population, sampled work, deliverables.] |
 | Conditions and score | [Prompts/tools/resources, score construction and aggregation.] |
 | Units and cohorts | [Denominators, subsets, dependencies, filtering.] |
+| Available data and identity | [System configuration; task/parent-item hierarchy; single, repeated or aggregated responses; observed/synthetic origin; source revision.] |
 | Material results | [Cohort-specific values, configurations and supported uncertainty description.] |
 
 Use a separate results table if necessary. State material common limitations once and explain their claim-specific consequences later. Keep observed results, retrospective estimates, and proposed experiments distinct.
+
+## Analyses performed and available evidence
+
+Include operations that bear on a material claim. A document-only case can use a short paragraph instead of an empty table. Distinguish author-reported results from actual computation in this run. Preserve material failures and unavailable inputs without substituting demonstrations.
+
+| A ID / claim or use | Question, inputs and applicability | Actual status and result | Inference informed and remaining limit |
+|---|---|---|---|
+| A1 / C1 | [Evidence IDs, versions, units, assumptions.] | [Author-reported / completed / unavailable / not executed / failed / simulation; material result and file/key.] | [Which relationship strengthens, weakens or remains unresolved; why.] |
+
+Put decisive numerical results, denominators, aggregation and uncertainty meaning in the report. Keep detailed profiles, registries and execution records as companions. Software success does not determine validity. Synthetic outputs are demonstrations only.
 
 ## Claims and intended uses
 
@@ -113,5 +126,7 @@ These are proposals unless actually performed. Consolidate shared studies here; 
 Make the source's contribution clear where it matters (framework, design, validation, diagnosis, use). A separate contribution table is optional; avoid duplicating this index. Keep precise numerical context in the results table and cross-reference it here. Do not repeat the complete rule register or add a second generic method-trace table.
 
 **Inspected scope:** [Primary materials, targeted searches or fixed packet, unavailable evidence that matters.]
+
+**Verification scope:** [Separate source/excerpt integrity, clause-level fact review, relevance to claims and actual computational execution. Report what was checked; a matching hash or excerpt does not certify inference.]
 
 **Review:** [Who reviewed, what was checked, actual material corrections or unresolved issues, and their effects. Label internal self-review accurately. A separate fact record may support auditability but does not substitute for report reasoning.]

@@ -36,6 +36,20 @@ The rule identifiers, grouping, examples of misuse, and mapping into report fiel
 | I11 Use consistency | Record the interpretation-decision/behavior-outcome relationship and its owner before consequence analysis. Keep it stable through the rating and revision condition. Distinct uses receive distinct records and, when needed, judgments. | Our implementation of M01/M09, introduced after observed case-use substitution; identifiers and the consistency procedure are not requirements stated by M2M. |
 | I12 Compact complete reporting | Store shared facts once; write claim-specific inference locally; consolidate proposed studies and remove duplicate method traces. Use a soft length target while retaining every material argument. | Our writing design responding to repetitive calibration reports, not an M2M word limit or a claim that shorter is inherently better. |
 
+## v5 implementation additions
+
+| Rule | Operational requirement | Source and attribution |
+|---|---|---|
+| I13 Measurement profile and routing | Record data origin, source version, systems, item hierarchy, score and availability; select checks jointly by claim relevance and data adequacy. | Our implementation, informed by AI Measurement Science Chapter 2 and Measurement Data Bank; not a new M2M dimension. |
+| I14 Layered verification | Separate source/excerpt integrity, fact accuracy, claim relevance and executed computation. Keep failed/unavailable/synthetic results distinct; missing extraction is not absence. | Our implementation, informed by Caliper's evidence/narrative separation and limitations observed in its structural checker. |
+| I15 Bounded diagnostics and inference return | Audit explicit data contracts; run only eligible checks; record actual results and the inferential link they inform. Do not convert software success to a validity label. | Our implementation, informed by measurement science and the existing project analyses. The scripts are original code, not copies of course notebooks or a generic implementation of their methods. |
+
+### External methods are separately attributable
+
+Keep three levels distinct: M2M framework principles, independently sourced statistical methods, and our implementation rules. Source claims and empirical findings are evidence, not additional rules. The method source, applicability assumptions and implementation revision belong in an analysis record. No automatic M2M rating is derived from IRT, factor analysis, G-theory or the bundled descriptive/paired bootstrap checks.
+
+The executable v5 scope is CSV auditing, binary response/repetition summaries and conditional paired task/cluster bootstrap intervals, plus evidence-record integrity. The IRT/G-theory guidance does not imply those models are implemented. Our helper neither imports torch_measure nor bundles third-party code/data.
+
 ## Applying the register
 
 For a decisive step, state: **principle -> application condition -> case evidence -> judgment**. For example, M04 permits direct-criterion satisfaction only after the report establishes that the measurement and claimed outcome coincide. The observed protocol supplies that fact; M04 alone cannot supply it. Use I02 when separating a fixed-set statement from a broader statement about new questions.
@@ -47,3 +61,10 @@ If an argument combines an M principle and an I convention, cite them separately
 - SkillXiv [Paper2Skill v0.0.3 entrypoint](https://github.com/ADu2021/skillXiv/blob/10b9e2ab98d22d657cdca33fadb35feaf4a2e26b/paper2skill/paper2skill-v0.0.3/SKILL.md) and its category-specific references. This skill borrows the idea of extracting different kinds of usable knowledge; it does not adopt the eleven categories as a compulsory taxonomy or quality scale.
 - Paper2Agent [Nature paper](https://www.nature.com/articles/s41586-026-11044-y), especially validation and the Discussion's distinction between faithful execution and analytical validity.
 - Paper2Agent [paper-material verification component](https://github.com/jmiao24/Paper2Agent/blob/61bdd684eb2d8ce57355d0ee0072393cb700f539/skills/paper2agent/paper2skill/SKILL.md). Its review and provenance practices inform I08; this is distinct from SkillXiv's similarly named engine.
+
+### v5 design references
+
+- [AI Measurement Science source](https://github.com/aims-foundations/aims/tree/0118277faed7602aef8493094c0ca0797078a62a), especially Chapters 2 and 5: data representation and design-dependent reliability.
+- [Measurement Data Bank schemas](https://github.com/aims-foundations/measurement-db/tree/ff987fc4213845374a7eeb50b9f7923a7bd9d178): observation/scoring identities and source claims.
+- [Benchmark Caliper extraction design](https://github.com/aims-foundations/benchmark-caliper/blob/f58e03d55a532bf709000e896d4229770d501119/.claude/skills/validity-pdf-extract/SKILL.md) and [structural checker](https://github.com/aims-foundations/benchmark-caliper/blob/f58e03d55a532bf709000e896d4229770d501119/scripts/verify_quotes.py): evidence/narrative separation; its six-dimensional framework and numeric ratings are not adopted.
+- [torch_measure quickstart](https://github.com/aims-foundations/torch_measure/blob/a461a8f24eb2960f692afdac0a2202c7d1d507ad/docs/source/quickstart.rst): optional future implementation resource; its data API is not assumed compatible without a checked adapter.

@@ -7,6 +7,9 @@ This is our I08 procedure. Perform it within the same request before delivering 
 | Target | Review action |
 |---|---|
 | Facts | Recheck decision-relevant numerical and protocol clauses using the evidence worksheet. Verify qualifiers independently, including resources, time conditions, uncertainty labels, and whether a value is measured or adjusted. Correct or qualify unsupported wording. |
+| Data and execution | Check version/condition identity, task hierarchy, valid scale, missingness and repeat structure against the profile. Inspect command status and actual outputs. Preserve author results, this run's computation, failures and demonstrations separately. |
+| Analytical relevance | Identify each operation's claim/use relationship. Confirm eligibility and uncertainty scope. Do not treat software success as scientific support. |
+| Verification meaning | Separate integrity, facts, relevance and execution. Matching hashes/excerpts cannot certify inference; zero extracted quotes do not establish absence. |
 | Claims and routes | Preserve owner, target, population, format, and context. Keep fixed observations separate from class claims; do not add a construct requirement to a route that does not need it. Separate achievement thresholds from validity. |
 | Every dimension | Locate actual evidence, warrant/application condition, material gap or satisfaction condition, decisive rating reason, and revision condition. A source citation or filled table does not replace any of these. A concise operational-satisfaction branch is valid. |
 | Rating basis | Apply judgment-and-use.md. Does the explanation identify why this label fits better than a plausible neighboring label? Is a missing study being treated mechanically as failure? Does a changed rating have an aligned claim/use and an attributable reason? |

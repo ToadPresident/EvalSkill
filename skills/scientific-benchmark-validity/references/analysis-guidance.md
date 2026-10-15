@@ -1,5 +1,7 @@
 # Conditional analysis guidance for scientific workflows
 
+These are conditional method recommendations, not shipped or validated implementations. The bundled v5 executable is limited to [auditing and response diagnostics](response-diagnostics.md). Read [analysis routing](analysis-routing.md) first.
+
 Use only the rows relevant to the requested inference. An instrument can be useful without every diagnostic below.
 
 | Evidence/question | Appropriate analysis | Interpretation to preserve |
